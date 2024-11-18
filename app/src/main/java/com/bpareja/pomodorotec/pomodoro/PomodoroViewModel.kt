@@ -101,12 +101,17 @@ class PomodoroViewModel(application: Application) : AndroidViewModel(application
         )
 
         val builder = NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
-            .setSmallIcon(R.drawable.pomodoro)
+            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm) // Icono de alarma
             .setContentTitle(title)
             .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
+            .setAutoCancel(false) // Notificación persistente
+            .setOngoing(true) // No se puede eliminar deslizando
+            .setStyle(NotificationCompat.BigTextStyle().bigText("No te distraigas, ¡es hora de concentrarse! Esta sesión es importante para tu productividad."))
+            .setLights(0xFF0000FF.toInt(), 1000, 1000) // Luz LED azul
+            .setVibrate(longArrayOf(0, 1000, 500, 1000, 500, 1500)) // Vibración fuerte
+            .setSound(android.provider.Settings.System.DEFAULT_ALARM_ALERT_URI)
 
         with(NotificationManagerCompat.from(context)) {
             if (ActivityCompat.checkSelfPermission(
